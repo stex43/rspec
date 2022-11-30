@@ -1,5 +1,3 @@
-Hash-based collections with known capacity should be initialized with the proper related static method.
-
 When creating an instance of HashMap or HashSet, the developer can pick a constructor with known capacity.
 However, the requested capacity is not fully allocated by default.
 Indeed, when the collection reaches the load factor of the collection (default: 0.75), the collection is resized on the fly, leading to unexpected performance issues.
