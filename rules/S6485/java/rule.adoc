@@ -49,3 +49,11 @@ public static Set<String> buildABetterSet() {
 - https://docs.oracle.com/en/java/javase/19/docs/api/java.base/java/util/LinkedHashMap.html#newLinkedHashMap(int)
 - https://docs.oracle.com/en/java/javase/19/docs/api/java.base/java/util/LinkedHashSet.html#newLinkedHashSet(int)
 - https://docs.oracle.com/en/java/javase/19/docs/api/java.base/java/util/WeakHashMap.html#newWeakHashMap(int)
+
+== Implementation specification
+
+=== Message
+Replace this call to the constructor with the better suited static method.
+
+=== Highlighting
+The infringing constructor call.
