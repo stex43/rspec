@@ -1,10 +1,18 @@
+Hash-based collections with known capacity should be initialized with the proper related static method.
+
+== Why is this an issue?
+
 When creating an instance of HashMap or HashSet, the developer can pick a constructor with known capacity.
 However, the requested capacity is not fully allocated by default.
 Indeed, when the collection reaches the load factor of the collection (default: 0.75), the collection is resized on the fly, leading to unexpected performance issues.
 
+== How to fix it
+
 As of Java 19, hash-based collections provide a static method that allocates the requested capacity at construction time.
 
-== Noncompliant Code Example
+=== Code examples
+
+==== Noncompliant code example
 
 [source,java]
 ----
@@ -14,20 +22,13 @@ public static Map<String, Integer> buildAMap() {
     return new HashMap<>(KNOWN_CAPACITY); // Noncompliant
 }
 
-public static Map<String, Integer> buildAMapWithMaxLoadFactor() {
-    return new HashMap<>(KNOWN_CAPACITY, 1.0f); // Noncompliant
-}
-
 public static Set<String> buildASet() {
     return new HashSet<>(KNOWN_CAPACITY); // Noncompliant
 }
 
-public static Set<String> buildASetWithMaxLoadFactor() {
-    return new HashSet<>(KNOWN_CAPACITY, 1.0f); // Noncompliant
-}
 ----
 
-== Compliant Solution
+==== Compliant solution
 
 [source,java]
 ----
@@ -40,9 +41,14 @@ public static Map<String, Integer> buildABetterMap() {
 public static Set<String> buildABetterSet() {
     return HashSet.newHashSet(KNOWN_CAPACITY);
 }
+
+public static Set<String> buildABetterSet(float customLoadFactor) {
+    return new HashSet<>(KNOWN_CAPACITY, customLoadFactor);
+}
 ----
 
-== See
+== Resources
+=== Documentation
 
 - https://docs.oracle.com/en/java/javase/19/docs/api/java.base/java/util/HashMap.html#newHashMap(int)
 - https://docs.oracle.com/en/java/javase/19/docs/api/java.base/java/util/HashSet.html#newHashSet(int)
@@ -50,10 +56,9 @@ public static Set<String> buildABetterSet() {
 - https://docs.oracle.com/en/java/javase/19/docs/api/java.base/java/util/LinkedHashSet.html#newLinkedHashSet(int)
 - https://docs.oracle.com/en/java/javase/19/docs/api/java.base/java/util/WeakHashMap.html#newWeakHashMap(int)
 
-== Implementation Specification
 
-=== Message
+Message: +
 Replace this call to the constructor with the better suited static method.
 
-=== Highlighting
+Highlighting: +
 The infringing constructor call.

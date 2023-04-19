@@ -14,5 +14,5 @@
   "sqKey": "S6485",
   "scope": "All",
   "defaultQualityProfiles": ["Sonar way"],
-  "quickfix": "feasible"
+  "quickfix": "targeted"
 }
