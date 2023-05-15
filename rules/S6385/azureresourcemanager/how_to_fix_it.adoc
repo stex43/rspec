@@ -4,6 +4,26 @@
 
 ==== Noncompliant code example
 
+[source,json,diff-id=2,diff-type=noncompliant]
+----
+targetScope = 'managementGroup'
+
+resource roleDef 'Microsoft.Authorization/roleDefinitions@2022-04-01' = { // Sensitive
+  properties: {
+    permissions: [
+      {
+        actions: ['*']
+        notActions: []
+      }
+    ]
+
+    assignableScopes: [
+      managementGroup().id
+    ]
+  }
+}
+----
+
 [source,json,diff-id=1,diff-type=noncompliant]
 ----
 {
@@ -30,6 +50,26 @@
 ----
 
 ==== Compliant solution
+
+[source,json,diff-id=2,diff-type=noncompliant]
+----
+targetScope = 'managementGroup'
+
+resource roleDef 'Microsoft.Authorization/roleDefinitions@2022-04-01' = { // Sensitive
+  properties: {
+    permissions: [
+      {
+        actions: ['Microsoft.Compute/*']
+        notActions: []
+      }
+    ]
+
+    assignableScopes: [
+      managementGroup().id
+    ]
+  }
+}
+----
 
 [source,json,diff-id=1,diff-type=compliant]
 ----
