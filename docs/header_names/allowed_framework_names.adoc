@@ -77,3 +77,4 @@
 * IDZSwiftCommonCrypto
 // Azure resource manager
 * ARM templates
+* Bicep
