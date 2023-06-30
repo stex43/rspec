@@ -1,0 +1,155 @@
+<div class="sect1">
+<h2 id="_description">Description</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When converting a string representation of a date and time to a <code>DateTime</code> object with one of the available system parsing methods, you should always provide an <code>IFormatProvider</code> parameter.
+If not provided, the method will use the machine&#8217;s <code>CultureInfo</code>; if the given string does not follow it, you&#8217;ll have an object that does not match the string representation or an unexpected runtime error.</p>
+</div>
+<div class="paragraph">
+<p>This rule raises an issue for the following date and time string representation parsing methods:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>DateTime.Parse</code></p>
+</li>
+<li>
+<p><code>DateTimeOffset.Parse</code></p>
+</li>
+<li>
+<p><code>DateOnly.Parse</code></p>
+</li>
+<li>
+<p><code>TimeOnly.Parse</code></p>
+</li>
+<li>
+<p><code>DateTime.TryParse</code></p>
+</li>
+<li>
+<p><code>DateTimeOffset.TryParse</code></p>
+</li>
+<li>
+<p><code>DateOnly.TryParse</code></p>
+</li>
+<li>
+<p><code>TimeOnly.TryParse</code></p>
+</li>
+<li>
+<p><code>DateTime.TryParseExact</code></p>
+</li>
+<li>
+<p><code>DateTimeOffset.TryParseExact</code></p>
+</li>
+<li>
+<p><code>DateOnly.TryParseExact</code></p>
+</li>
+<li>
+<p><code>TimeOnly.TryParseExact</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_why_is_this_an_issue">Why is this an issue?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you try to parse a string representation of date and time that does not have the expected format based on the machine&#8217;s culture you&#8217;ll get <code>DateTime</code> or <code>DateTimeOffset</code> object that does not match the input or a runtime error.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_how_to_fix_it">How to fix it</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Alway use an overload of the parse method, where you can provide an <code>IFormatProvider</code> parameter.</p>
+</div>
+<div class="sect2">
+<h3 id="_code_examples">Code examples</h3>
+<div class="sect3">
+<h4 id="_noncompliant_code_example">Noncompliant code example</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-csharp" data-lang="csharp">var dateTimeString = "4/12/2023 4:05:48 PM"; // This is an en-US format string - 12 of April 2023
+var dateTimeObject = DateTime.Parse(dateTimeString); // This is wrongly parsed as 4th of December, when it's read in a machine with "CultureInfo.CurrentCulture" en-150 (English Europe)
+
+var dateTimeString2 = "4/13/2023 4:05:48 PM"; // This is an en-US format string - 13 of April 2023
+var dateTimeObject2 = DateTime.Parse(dateTimeString2); // Runtime Error, when it's parsed in a machine with "CultureInfo.CurrentCulture" en-150 (English Europe).
+
+var timeInSaudiArabia = new TimeOnly(16, 23).ToString(new CultureInfo("ar-SA"));
+var timeObject = TimeOnly.Parse(timeInSaudiArabia); // Runtime Error, when it's parsed in a machine with "CultureInfo.CurrentCulture" en-150 (English Europe).</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_compliant_solution">Compliant solution</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-csharp" data-lang="csharp">var dateTimeString = "4/12/2023 4:05:48 PM"; // This is an en-US format string - 12 of April 2023
+var dateTimeObject = DateTime.Parse(dateTimeString, new CultureInfo("en-US"));
+
+var dateTimeString2 = "4/13/2023 4:05:48 PM"; // This is an en-US format string - 13 of April 2023
+var dateTimeObject2 = DateTime.Parse(dateTimeString2, new CultureInfo("en-US"))
+
+var timeInSaudiArabia = new TimeOnly(16, 23).ToString(new CultureInfo("ar-SA"));
+var timeObject = TimeOnly.Parse(timeInSaudiArabia, new CultureInfo("ar-SA"));</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_resources">Resources</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_documentation">Documentation</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://learn.microsoft.com/en-us/dotnet/api/system.datetime.parse">DateTime.Parse method</a></p>
+</li>
+<li>
+<p><a href="https://learn.microsoft.com/en-us/dotnet/api/system.datetime.tryparse">DateTime.TryParse method</a></p>
+</li>
+<li>
+<p><a href="https://learn.microsoft.com/en-us/dotnet/api/system.datetime.tryparseexact">DateTime.TryParseExact method</a></p>
+</li>
+<li>
+<p><a href="https://learn.microsoft.com/en-us/dotnet/api/system.datetimeoffset.parse">DateTimeOffset.Parse method</a></p>
+</li>
+<li>
+<p><a href="https://learn.microsoft.com/en-us/dotnet/api/system.datetimeoffset.tryparse">DateTimeOffset.TryParse method</a></p>
+</li>
+<li>
+<p><a href="https://learn.microsoft.com/en-us/dotnet/api/system.datetimeoffset.tryparseexact">DateTimeOffset.TryParseExact method</a></p>
+</li>
+<li>
+<p><a href="https://learn.microsoft.com/en-us/dotnet/api/system.dateonly.parse">DateOnly.Parse method</a></p>
+</li>
+<li>
+<p><a href="https://learn.microsoft.com/en-us/dotnet/api/system.dateonly.tryparse">DateOnly.TryParse method</a></p>
+</li>
+<li>
+<p><a href="https://learn.microsoft.com/en-us/dotnet/api/system.dateonly.tryparseexact">DateOnly.TryParseExact method</a></p>
+</li>
+<li>
+<p><a href="https://learn.microsoft.com/en-us/dotnet/api/system.timeonly.parse">TimeOnly.Parse method</a></p>
+</li>
+<li>
+<p><a href="https://learn.microsoft.com/en-us/dotnet/api/system.timeonly.tryparse">TimeOnly.TryParse method</a></p>
+</li>
+<li>
+<p><a href="https://learn.microsoft.com/en-us/dotnet/api/system.timeonly.tryparseexact">TimeOnly.TryParseExact method</a></p>
+</li>
+<li>
+<p><a href="https://learn.microsoft.com/en-us/dotnet/api/system.globalization.cultureinfo">Culture Info class documentation</a></p>
+</li>
+<li>
+<p><a href="https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-date-and-time-format-strings">Standard date and time format strings</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>

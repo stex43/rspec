@@ -1,0 +1,59 @@
+<div class="sect1">
+<h2 id="_description">Description</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_why_is_this_an_issue">Why is this an issue?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>Type-constraints</em> provide a terse way to express constraints on the type deduced for a given template parameter or auto placeholder.
+In a situation when a type-constraint is applied to a forwarding reference parameter (<code>T&amp;&amp;</code>), the corresponding concept will be checked
+against the <em>lvalue reference</em> (if the argument is an <em>lvalue</em>) or the plain type (if the argument is an <em>rvalue</em>).</p>
+</div>
+<div class="paragraph">
+<p>Even if it is possible to write a check that works for both plain types and references, it requires a dedicated effort,
+and a naive attempt may silently fail for one or the other. For instance, a <code>std::copyable</code> constraint is never satisfied for references,
+regardless of the referenced type, while a <code>std::copy_constructible</code> constraint always is.</p>
+</div>
+<div class="paragraph">
+<p>This rule detects forwarding reference parameters that are constrained by the standard-provided concepts using <em>type-constraint</em> syntax.</p>
+</div>
+<div class="sect2">
+<h3 id="_noncompliant_code_example">Noncompliant code example</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">auto func(std::copy_constructible auto&amp;&amp; arg) // noncompliant
+{ /* … */ }
+
+template&lt;std::copyable T&gt;
+auto func2(T&amp;&amp; arg)  // noncompliant
+{ /* … */ }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_compliant_solution">Compliant solution</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">auto func(auto&amp;&amp; argc)
+  requires std::copy_constructible&lt;std::remove_cvref_t&lt;decltype(arg)&gt;&gt;
+{ /* … */ }
+
+template&lt;typename T&gt;
+  requires std::copyable&lt;std::remove_cvref_t&lt;T&gt;&gt;
+auto func2(T&amp;&amp; arg)
+{ /* … */ }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_exceptions">Exceptions</h3>
+<div class="paragraph">
+<p>The <code>std::ranges::range</code> concept and its refinements (like <code>std::ranges::forward_range</code>, <code>std::ranges::bidirectional_range</code>)
+are designed to handle forwarding references parameters, and will not raise issues for this rule.</p>
+</div>
+</div>
+</div>
+</div>

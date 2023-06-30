@@ -1,0 +1,162 @@
+<div class="sect1">
+<h2 id="_description">Description</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_why_is_this_an_issue">Why is this an issue?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Environment variable tampering occurs in a web application when it retrieves
+data like parameters or headers from an incoming HTTP request and uses it to define
+the variables.</p>
+</div>
+<div class="paragraph">
+<p>Depending on the controlled variable, an attacker could
+man-in-the-middle network requests or, in rare cases, achieve code execution.</p>
+</div>
+<div class="sect2">
+<h3 id="_what_is_the_potential_impact">What is the potential impact?</h3>
+<div class="paragraph">
+<p>An attacker defines sensitive environment variables and can reach
+non-intended features or influence application execution flow. These environment
+variables could be system defined or application-specific.</p>
+</div>
+<div class="paragraph">
+<p>Examples of CVEs that resulted from this vulnerability were CVE-2017-17562 and
+CVE-2022-43781.</p>
+</div>
+<div class="paragraph">
+<p>Below are some real-world scenarios that illustrate some impacts of an
+attacker exploiting the vulnerability.</p>
+</div>
+<div class="sect3">
+<h4 id="_ld_preload_hijacking_library_functions">LD_PRELOAD: Hijacking library functions</h4>
+<div class="paragraph">
+<p>An attacker can upload a shared object to the web server and defines the
+LD_PRELOAD environment variable to ensure the shared object is loaded when an arbitrary
+executable is run. In this malicious shared object, the attacker would overwrite a used
+function in the arbitrary executable and achieve code execution.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_http_proxy_man_in_the_middle_newtork_requests">HTTP_PROXY: Man-in-the-middle newtork requests</h4>
+<div class="paragraph">
+<p>The web application runs an executable that respects the HTTP_PROXY
+environment variable. An attacker manipulates it to point to a reverse proxy controlled by
+him and thus can sniff any sensitive data shared in web requests.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_how_to_fix_it_in_java_se">How to fix it in Java SE</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_code_examples">Code examples</h3>
+<div class="paragraph">
+<p>The following code is vulnerable to environment variable manipulation as it
+constructs the variables from untrusted data.</p>
+</div>
+<div class="sect3">
+<h4 id="_noncompliant_code_example">Noncompliant code example</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+  Runtime r = Runtime.getRuntime();
+  String userInput = request.getParameter("example");
+
+  if (userInput != null) {
+    String[] envs = {userInput};
+    r.exec("/path/to/example", userInput);
+  } else{
+    r.exec("/path/to/example");
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_compliant_solution">Compliant solution</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+  Runtime r = Runtime.getRuntime();
+  String userInput = request.getParameter("example");
+
+  if (userInput != null &amp;&amp; userInput.matches("^[a-zA-Z0-9]*$")) {
+    String[] envs = {"ENV_VAR=%s".format(userInput)};
+    r.exec("/path/to/example", envs);
+  } else {
+    r.exec("/path/to/example");
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_how_does_this_work">How does this work?</h3>
+<div class="paragraph">
+<p>User input should be properly sanitized and validated, and ideally used only for
+the value of the environment variable. The environment variable name should be
+statically defined.</p>
+</div>
+<div class="paragraph">
+<p>Validation and sanitization could be done by restricting alphanumeric characters for the
+value and evaluating the name, if not statically defined, against an allowlist of
+name values.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_resources">Resources</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_standards">Standards</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP Top 10 2021 Category A3</a> - Injection</p>
+</li>
+<li>
+<p><a href="https://owasp.org/www-project-top-ten/2017/A1_2017-Injection">OWASP Top 10 2017 Category A1</a> - Injection</p>
+</li>
+<li>
+<p><a href="https://cwe.mitre.org/data/definitions/20">MITRE, CWE-20</a> - Improper Input Validation</p>
+</li>
+<li>
+<p><a href="https://cwe.mitre.org/data/definitions/454">MITRE, CWE-454</a> - External Initialization of Trusted Variables or Data Stores</p>
+</li>
+</ul>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_implementation_specification">Implementation Specification</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>(visible only on this page)</p>
+</div>
+<div class="sect2">
+<h3 id="_message">Message</h3>
+<div class="paragraph">
+<p>Change this code to prevent users from defining arbitrary environment variables.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_highlighting">Highlighting</h3>
+<div class="paragraph">
+<p>Highlight <code>String[] envp</code> the 2nd positional argument of
+<code>java.lang.Runtime#exec</code> calls.</p>
+</div>
+<hr>
+<hr>
+</div>
+</div>
+</div>

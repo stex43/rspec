@@ -1,0 +1,58 @@
+<div class="sect1">
+<h2 id="_description">Description</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_why_is_this_an_issue">Why is this an issue?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>std::format</code> and the related formatting functions provide two different options to pad numerical values up to a specific width:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The usual character padding that applies to many types and looks like: <code>std::format(“{:*&gt;5}”, num);</code>. This adds as many '*' characters as necessary to reach a width of 5.</p>
+</li>
+<li>
+<p>Adding the number 0 just before the width to declare numeric padding: <code>std::format(“{:05}”, num);</code>. This numeric padding adds 0 before the number and therefore takes no alignment option.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>When working with numeric values, one almost always wants to use the numeric padding as it works correctly with signed numbers:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">std::format("{:0&gt;5}", -10); // Usual padding, prints 00-10
+std::format("{:05}", -10);  // Numeric padding, -0010</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This rule raises an issue when a format specification uses '0' as a padding character instead of using numeric padding.</p>
+</div>
+<div class="sect2">
+<h3 id="_noncompliant_code_example">Noncompliant code example</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">void formatted(int i, double d) {
+ std::cout &lt;&lt; std::format("{:0&gt;5}\n", i); // Noncompliant
+ std::cout &lt;&lt; std::format("{:0&gt;#5}\n", d); // Noncompliant
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_compliant_solution">Compliant solution</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">void formatted(int i, double d) {
+ std::cout &lt;&lt; std::format("{:05}\n", i); // Compliant
+ std::cout &lt;&lt; std::format("{:#05}\n", d); // Compliant
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>

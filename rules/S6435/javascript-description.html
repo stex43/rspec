@@ -1,0 +1,55 @@
+<div class="sect1">
+<h2 id="_description">Description</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_why_is_this_an_issue">Why is this an issue?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>React components describe an independent and reusable piece of UI. To define it one can declare a function (functional component) or a class (class component). When implementing a class component, a <code>render</code> method is required to return the DOM structure, typically with JSX syntax.</p>
+</div>
+<div class="paragraph">
+<p>When writing the render method in a component it is easy to forget to return the JSX content, which means the component will render nothing. Thus having a <code>render</code> method without a single <code>return</code> statement is usually a mistake. If it&#8217;s required that the component renders to nothing, the method should return <code>null</code>.</p>
+</div>
+<div class="sect2">
+<h3 id="_noncompliant_code_example">Noncompliant code example</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">const React = require('react');
+class App extends React.Component {
+  render() {
+    &lt;div&gt;Contents&lt;/div&gt;;
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_compliant_solution">Compliant solution</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">const React = require('react');
+class App extends React.Component {
+  render() {
+    return &lt;div&gt;Contents&lt;/div&gt;;
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_resources">Resources</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://reactjs.org/docs/react-component.html#render">render()</a> - React API Reference</p>
+</li>
+</ul>
+</div>
+</div>
+</div>

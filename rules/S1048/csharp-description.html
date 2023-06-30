@@ -1,0 +1,120 @@
+<div class="sect1">
+<h2 id="_description">Description</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_why_is_this_an_issue">Why is this an issue?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Finalizers (historically referred to as destructors) are used to perform any necessary final clean-up when the garbage collector is collecting a class instance.
+The programmer has no control over when the destructor is called; the garbage collector decides when to call it, and the destructor implicitly calls <code>Finalize</code> on the object&#8217;s base class.</p>
+</div>
+<div class="paragraph">
+<p>When you create a destructor, you should never throw an exception in it, as you are risking having your application terminated without a graceful cleanup.</p>
+</div>
+<div class="paragraph">
+<p>If a destructor throws an exception, and the runtime is not hosted by an application that overrides the default policy and the behavior of the <code>UnhandledExceptionEventHandler</code>, then
+the runtime terminates the process immediately without graceful cleanup (<code>finally</code> blocks and <code>Finalizer</code> methods are not executed).</p>
+</div>
+<div class="paragraph">
+<p>The rule raises an issue on <code>throw</code> statements used in destructors.</p>
+</div>
+<div class="sect2">
+<h3 id="_noncompliant_code_example">Noncompliant code example</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-csharp" data-lang="csharp">class MyClass
+{
+    ~MyClass()
+    {
+        throw new NotImplementedException(); // Noncompliant
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_compliant_solution">Compliant solution</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-csharp" data-lang="csharp">class MyClass
+{
+    ~MyClass()
+    {
+
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_resources">Resources</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_documentation">Documentation</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/finalizers">Finalizers (destructors)</a></p>
+</li>
+<li>
+<p><a href="https://learn.microsoft.com/en-us/dotnet/api/system.appdomain">App Domain</a></p>
+</li>
+<li>
+<p><a href="https://learn.microsoft.com/en-us/dotnet/api/system.appdomain.unhandledexception">AppDomain.UnhandledException Event</a></p>
+</li>
+</ul>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_implementation_specification">Implementation Specification</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>(visible only on this page)</p>
+</div>
+<div class="sect2">
+<h3 id="_message">Message</h3>
+<div class="paragraph">
+<p>Remove this 'throw' statement.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_highlighting">Highlighting</h3>
+<div class="paragraph">
+<p>The 'throw' statement.</p>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_comments_and_links">Comments And Links</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>(visible only on this page)</p>
+</div>
+<div class="sect2">
+<h3 id="_on_1_mar_2018_170327_valeri_hristov_wrote">on 1 Mar 2018, 17:03:27 Valeri Hristov wrote:</h3>
+<div class="paragraph">
+<p>Throwing in IDisposable.Dispose is covered in <a data-rspec-id="S3877" class="rspec-auto-link">RSPEC-3877</a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_relates_to_s5403">relates to: <a data-rspec-id="S5403" class="rspec-auto-link">S5403</a></h3>
+
+</div>
+<div class="sect2">
+<h3 id="_on_31_mar_2015_190211_evgeny_mandrikov_wrote">on 31 Mar 2015, 19:02:11 Evgeny Mandrikov wrote:</h3>
+<div class="paragraph">
+<p>\[~ann.campbell.2] implementation seems more complete (SQALE, description) than this spec.</p>
+</div>
+</div>
+</div>
+</div>

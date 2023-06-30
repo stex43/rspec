@@ -1,0 +1,96 @@
+<div class="sect1">
+<h2 id="_description">Description</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_why_is_this_an_issue">Why is this an issue?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The comma operator (<code>,</code>) evaluates its operands, from left to right, and returns the second one. That&#8217;s useful in some situations, but just wrong in a <code>switch</code> <code>case</code>. You may think you&#8217;re compactly handling multiple values in the case, but only the last one in the comma-list will ever be handled. The rest will fall through to the default.</p>
+</div>
+<div class="paragraph">
+<p>Similarly the logical OR operator (<code>||</code>) will not work in a <code>switch</code> <code>case</code>, only the first argument will be considered at execution time.</p>
+</div>
+<div class="sect2">
+<h3 id="_noncompliant_code_example">Noncompliant code example</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">switch (a) {
+  case 1,2:  // Noncompliant; only 2 is ever handled by this case
+    doTheThing(a);
+  case 3 || 4: // Noncompliant; only '3' is handled
+    doThatThing(a);
+  case 5:
+    doTheOtherThing(a);
+  default:
+    console.log('Neener, neener!');  // this happens when a==1 or a == 4
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_compliant_solution">Compliant solution</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">switch (a) {
+  case 1:
+  case 2:
+    doTheThing(a);
+  case 3:
+  case 4:
+    doThatThing(a);
+  case 5:
+    doTheOtherThing(a);
+  default:
+    console.log('Neener, neener!');
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_exceptions">Exceptions</h3>
+<div class="paragraph">
+<p>The <code>switch (true)</code> pattern is a common programming practice to match against expressions rather than literals. Expressions in the <code>case</code> clauses act as guards, i.e., they must evaluate to <code>true</code> if the execution is to continue in the branch.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">function weekStatus (day) {
+  let status;
+  switch (true) {
+    case (day === 'MON' || day === 'TUE' || day === 'WED' || day === 'THU' || day === 'FRI'):
+      status = 'Weekday';
+      break;
+    case (day === 'SAT' || day === 'SUN'):
+      status = 'Weekend';
+      break;
+  }
+  return status;
+}</code></pre>
+</div>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_implementation_specification">Implementation Specification</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>(visible only on this page)</p>
+</div>
+<div class="sect2">
+<h3 id="_message">Message</h3>
+<div class="paragraph">
+<p>Explicitly specify n separate cases that fall through; currently this case clause only works for "xxx".</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_highlighting">Highlighting</h3>
+<div class="paragraph">
+<p>case value, e.g. 0,1 in <code>case 0,1:</code></p>
+</div>
+</div>
+</div>
+</div>

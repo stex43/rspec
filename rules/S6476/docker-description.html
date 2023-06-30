@@ -1,0 +1,30 @@
+<div class="sect1">
+<h2 id="_description">Description</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_why_is_this_an_issue">Why is this an issue?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Dockerfile instructions are not case-sensitive. However, they should be in upper case to distinguish them from arguments more easily. Shared coding conventions allow teams to collaborate effectively.</p>
+</div>
+<div class="sect2">
+<h3 id="_noncompliant_code_example">Noncompliant code example</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-docker" data-lang="docker">from ubuntu:22.04 as jammy</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_compliant_solution">Compliant solution</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-docker" data-lang="docker">FROM ubuntu:22.04 AS jammy</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>

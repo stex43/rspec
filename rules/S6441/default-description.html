@@ -1,0 +1,64 @@
+<div class="sect1">
+<h2 id="_description">Description</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_why_is_this_an_issue">Why is this an issue?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This rule reports the methods of React component classes which are neither used nor React lifecycle methods. Note that this rule checks only the scope of a component class, which means that issues will be raised on the methods that are only used outside of the class.</p>
+</div>
+<div class="paragraph">
+<p>Methods that are never executed are dead code: unnecessary, inoperative code that should be removed. Cleaning out dead code decreases the size of the maintained codebase, making it easier to understand the program and preventing bugs from being introduced.</p>
+</div>
+<div class="paragraph">
+<p>React encourages data-driven components. To modify a child component, re-render it with new <code>props</code>.</p>
+</div>
+<div class="sect2">
+<h3 id="_noncompliant_code_example">Noncompliant code example</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">class Profile extends React.Component {
+  render(props) {
+    return &lt;h1&gt;{ props.name }&lt;/h1&gt;;
+  }
+
+  getDefaultName() { // Noncompliant, this method is never used and is a dead code
+    return 'John Smith';
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_compliant_solution">Compliant solution</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">class Profile extends React.Component {
+  render(props) {
+    return &lt;h1&gt;{ props.name || getDefaultName() }&lt;/h1&gt;;
+  }
+
+  getDefaultName() {
+    return 'John Smith';
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_resources">Resources</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://reactjs.org/docs/components-and-props.html">Components and Props</a> - React Documentation</p>
+</li>
+</ul>
+</div>
+</div>
+</div>

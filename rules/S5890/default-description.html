@@ -1,0 +1,119 @@
+<div class="sect1">
+<h2 id="_description">Description</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_why_is_this_an_issue">Why is this an issue?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Type hints can be used to communicate the intended type of a given variable. These are not enforced at runtime and not respecting them might not necessarily lead to runtime errors.</p>
+</div>
+<div class="paragraph">
+<p>It is however confusing and could lead to maintainability issues.</p>
+</div>
+<div class="sect2">
+<h3 id="_noncompliant_code_example">Noncompliant code example</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-python" data-lang="python">def my_function():
+    my_int: int = "string"  # Noncompliant</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_compliant_solution">Compliant solution</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-python" data-lang="python">def my_function():
+    my_str: str = "string"</code></pre>
+</div>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_implementation_specification">Implementation Specification</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>(visible only on this page)</p>
+</div>
+<div class="sect2">
+<h3 id="_message">Message</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>If the asignment value is not <code>None</code> then</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Primary: Assign to "XXX" a value of type "YYY" instead of "ZZZ" or update the type hint of "XXX".</p>
+</li>
+<li>
+<p>Secondary: Type hint.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>If the assignment value is <code>None</code></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Primary: Replace the type hint "XXX" with "Optional[XXX]" or don&#8217;t assign "None" to "YYY"</p>
+</li>
+<li>
+<p>Secondary: Type hint.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_highlighting">Highlighting</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Primary: The assigned value</p>
+</li>
+<li>
+<p>Secondary: The type hint</p>
+</li>
+</ul>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_comments_and_links">Comments And Links</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>(visible only on this page)</p>
+</div>
+<div class="sect2">
+<h3 id="_on_12_may_2021_004518_mike_heyns_wrote">on 12 May 2021, 00:45:18 Mike Heyns wrote:</h3>
+<div class="paragraph">
+<p>This rule does not appear to be working for <a href="https://docs.python.org/3/library/dataclasses.html#init-only-variables">Dataclass Init-Only variables</a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>@dataclass
+class Book:
+    name: str
+    condition: InitVar[str] = ''</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><em><em>_Assign to "condition" a value of type "InitVar[str]" instead of "str" or update its type hint.</em>_</em></p>
+</div>
+<div class="paragraph">
+<p>In fact, most examples including the official documentation use <code>None</code> as the default for init-only arguments. Attempting to use <code>InitVar[Optional[str]]</code> has the same effect as above.</p>
+</div>
+</div>
+</div>
+</div>

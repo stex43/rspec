@@ -1,0 +1,39 @@
+<div class="sect1">
+<h2 id="_description">Description</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_why_is_this_an_issue">Why is this an issue?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As the <code>equals</code> method&#8217;s parameter is typed as generic <code>Any?</code>, any type of object may be passed to it. The method implementation should not assume it will only be used to test objects of its own class type. It must instead check the parameter&#8217;s type.</p>
+</div>
+<div class="sect2">
+<h3 id="_noncompliant_code_example">Noncompliant code example</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">override fun equals(other: Any?): Boolean {  // Noncompliant
+  val mc = other as MyClass
+  // ...
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_compliant_solution">Compliant solution</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">override fun equals(other: Any?): Boolean {
+  if (other?.javaClass != this.javaClass)
+    return false
+
+  val mc = other as MyClass
+  // ...
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>

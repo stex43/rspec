@@ -1,0 +1,52 @@
+<div class="sect1">
+<h2 id="_description">Description</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_why_is_this_an_issue">Why is this an issue?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>JSX is a special JavaScript syntax allowing to easily write HTML together with JavaScript when using React framework.
+Adding comments inside JSX might be tricky as JSX code is neither a plain HTML nor JavaScript.
+It&#8217;s not allowed to use HTML comment syntax (<code>&lt;!-- &#8230;&#8203; --&gt;</code>), it will make the parsing fail.
+And using JavaScript style comments, single or multiline, will create an additional text node in the browser, which is probably not expected.
+To avoid that use JavaScript multiline comments enclosed in the curly braces.
+Note that JavaScript comments are also allowed next to the attributes (<code>&lt;div /* comment */&gt;</code>).</p>
+</div>
+<div class="paragraph">
+<p>However if the additional text node is intentional, prefer using a JavaScript string literal containing that comment.</p>
+</div>
+<div class="sect2">
+<h3 id="_noncompliant_code_example">Noncompliant code example</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">&lt;div&gt;
+  // nothing here
+&lt;/div&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_compliant_solution">Compliant solution</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">&lt;div&gt;
+  { /* nothing here */ }
+&lt;/div&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When text node is intentional:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">&lt;div&gt;
+  { '// nothing here' }
+&lt;/div&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
